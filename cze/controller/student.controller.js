@@ -11,4 +11,11 @@ router.get("/list", (req, res) => {
   res.json(students)
 })
 
+router.get("/get", (req, res) => {
+  const id = parseInt(req.query.id)
+  const student = students.find((student) => student.id === id)
+
+  res.json(student)
+})
+
 module.exports = router
