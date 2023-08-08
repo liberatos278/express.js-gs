@@ -1,17 +1,17 @@
 const express = require("express")
 const router = express.Router()
 
+const getSubject = require("../services/subject/get.service")
+const listSubjects = require("../services/subject/list.service")
+
 const subjects = []
 
-router.get("/list", (req, res) => {
-  res.json(subjects)
+router.get("/list", async (req, res) => {
+  await listSubjects(req, res)
 })
 
-router.get("/get", (req, res) => {
-  const id = parseInt(req.query.id)
-  const subject = subjects.find((subject) => subject.id === id)
-
-  res.json(subject)
+router.get("/get", async (req, res) => {
+  await getSubject(req, res)
 })
 
 module.exports = router
