@@ -1,8 +1,9 @@
 const express = require("express")
 const router = express.Router()
 
+const subjects = []
+
 router.get("/list", (req, res) => {
-  const subjects = []
   res.json(subjects)
 })
 
