@@ -3,6 +3,8 @@ const app = express()
 
 require("dotenv").config()
 
+app.use(express.json())
+
 app.use("/classroom", require("./controllers/classroom.controller"))
 app.use("/student", require("./controllers/student.controller"))
 app.use("/grade", require("./controllers/grade.controller"))
