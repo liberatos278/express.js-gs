@@ -5,6 +5,7 @@ const listClassrooms = require("../services/classroom/list.service")
 const getClassroom = require("../services/classroom/get.service")
 const createClassroom = require("../services/classroom/create.service")
 const updateClassroom = require("../services/classroom/update.service")
+const deleteClassroom = require("../services/classroom/delete.service")
 
 router.get("/list", async (req, res) => {
   await listClassrooms(req, res)
@@ -20,6 +21,10 @@ router.post("/create", async (req, res) => {
 
 router.put("/update", async (req, res) => {
   await updateClassroom(req, res)
+})
+
+router.delete("/delete", async (req, res) => {
+  await deleteClassroom(req, res)
 })
 
 module.exports = router
