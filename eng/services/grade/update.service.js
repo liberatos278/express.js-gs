@@ -1,5 +1,5 @@
 async function updateGrade(req, res) {
-  const { id, grade, weight, description, dateTs } = req.body
+  const { id } = req.body
 
   const gradeObj = {
     id: "12345678",
@@ -13,10 +13,7 @@ async function updateGrade(req, res) {
 
   const newGrade = {
     ...gradeObj,
-    grade: grade ? grade : gradeObj.grade,
-    weight: weight ? weight : gradeObj.weight,
-    description: description ? description : gradeObj.description,
-    dateTs: dateTs ? dateTs : gradeObj.dateTs,
+    ...req.body,
   }
 
   res.json(newGrade)

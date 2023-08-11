@@ -1,12 +1,12 @@
 async function updateClassroom(req, res) {
-  const { id, name } = req.body
+  const { id } = req.body
 
   const classroom = {
     id: "12345678",
     name: "Quinta",
   }
 
-  const newClassroom = { ...classroom, name }
+  const newClassroom = { ...classroom, ...req.body }
   res.json(newClassroom)
 }
 

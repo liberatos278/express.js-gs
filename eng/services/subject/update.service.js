@@ -1,5 +1,5 @@
 async function updateSubject(req, res) {
-  const { id, name, shortName, description } = req.body
+  const { id } = req.body
 
   const subject = {
     id: "12345678",
@@ -11,9 +11,7 @@ async function updateSubject(req, res) {
 
   const newSubject = {
     ...subject,
-    name: name ? name : subject.name,
-    shortName: shortName ? shortName : subject.shortName,
-    description: description ? description : subject.description,
+    ...req.body,
   }
 
   res.json(newSubject)

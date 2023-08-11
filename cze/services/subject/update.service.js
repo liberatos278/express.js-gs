@@ -1,19 +1,17 @@
 async function updateSubject(req, res) {
-  const { id, name, shortName, description } = req.body
+  const { id } = req.body
 
   const subject = {
     id: "12345678",
     name: "Matematika",
     shortName: "M",
     description:
-      "Matematika je věda zabývající se čísly, prostory, strukturami a změnami.",
+      "Matematika je věda o číslech, prostorech, strukturách a změnách.",
   }
 
   const newSubject = {
     ...subject,
-    name: name ? name : subject.name,
-    shortName: shortName ? shortName : subject.shortName,
-    description: description ? description : subject.description,
+    ...req.body,
   }
 
   res.json(newSubject)

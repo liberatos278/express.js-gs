@@ -1,5 +1,5 @@
 async function updateStudent(req, res) {
-  const { id, firstname, surname, classroomId } = req.body
+  const { id } = req.body
 
   const student = {
     id: "12345678",
@@ -11,9 +11,7 @@ async function updateStudent(req, res) {
 
   const newStudent = {
     ...student,
-    firstname: firstname ? firstname : student.firstname,
-    surname: surname ? surname : student.surname,
-    classroomId: classroomId ? classroomId : student.classroomId,
+    ...req.body,
   }
 
   res.json(newStudent)
