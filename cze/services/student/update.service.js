@@ -1,18 +1,32 @@
+const path = require("path")
+const StudentDao = require("../../dao/student.dao")
+const ClassroomDao = require("../../dao/classroom.dao")
+
+const studentDao = new StudentDao(
+  path.join(__dirname, "..", "..", "data", "students.json")
+)
+
+const classroomDao = new ClassroomDao(
+  path.join(__dirname, "..", "..", "data", "classrooms.json")
+)
+
 async function updateStudent(req, res) {
-  const { id } = req.body
+  const { id, firstname, surname, nationalId, classroomId } = req.body
 
-  const student = {
-    id: "12345678",
-    firstname: "John",
-    surname: "Doe",
-    classroomId: "12345678",
-    nationalId: "12345678",
+  const classroom = await classroomDao.getClassroom(classroomId)
+  if (!classroom) {
+    return res
+      .status(400)
+      .end(`Třída s identifikátorem ${classroomId} neexistuje`)
   }
 
-  const newStudent = {
-    ...student,
-    ...req.body,
-  }
+  const newStudent = await studentDao.updateStudent({
+    id,
+    firstname,
+    surname,
+    nationalId,
+    classroomId,
+  })
 
   res.json(newStudent)
 }

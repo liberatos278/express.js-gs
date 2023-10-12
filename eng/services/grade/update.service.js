@@ -1,20 +1,43 @@
+const path = require("path")
+const GradeDao = require("../../dao/grade.dao")
+const SubjectDao = require("../../dao/subject.dao")
+const StudentDao = require("../../dao/student.dao")
+
+const gradeDao = new GradeDao(
+  path.join(__dirname, "..", "..", "data", "grades.json")
+)
+
+const subjectDao = new SubjectDao(
+  path.join(__dirname, "..", "..", "data", "subjects.json")
+)
+
+const studentDao = new StudentDao(
+  path.join(__dirname, "..", "..", "data", "students.json")
+)
+
 async function updateGrade(req, res) {
-  const { id } = req.body
+  const { id, subjectId, studentId, dateTs, grade, description, weight } =
+    req.params
 
-  const gradeObj = {
-    id: "12345678",
-    grade: 1,
-    weight: 2,
-    description: "Test",
-    dateTs: "2022-07-15T09:24:36.541Z",
-    studentId: "12345678",
-    subjectId: "12345678",
-  }
+  const subject = await subjectDao.getSubject(subjectId)
+  if (!subject)
+    return res.status(400).end(`Subject with id ${subjectId} does not exist`)
 
-  const newGrade = {
-    ...gradeObj,
-    ...req.body,
-  }
+  const student = await studentDao.getStudent(studentId)
+  if (!student)
+    return res.status(400).end(`Student with id ${studentId} does not exist`)
+
+  const classroomId = student.classroomId
+  const newGrade = await gradeDao.updateGrade({
+    id,
+    subjectId,
+    studentId,
+    dateTs,
+    grade,
+    description,
+    weight,
+    classroomId,
+  })
 
   res.json(newGrade)
 }

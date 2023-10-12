@@ -1,13 +1,15 @@
+const path = require("path")
+const ClassroomDao = require("../../dao/classroom.dao")
+
+const classroomDao = new ClassroomDao(
+  path.join(__dirname, "..", "..", "data", "classrooms.json")
+)
+
 async function updateClassroom(req, res) {
-  const { id } = req.body
+  const { id, name } = req.body
+  const updatedClassroom = await classroomDao.updateClassroom({ id, name })
 
-  const classroom = {
-    id: "12345678",
-    name: "Quinta",
-  }
-
-  const newClassroom = { ...classroom, ...req.body }
-  res.json(newClassroom)
+  res.json(updatedClassroom)
 }
 
 module.exports = updateClassroom

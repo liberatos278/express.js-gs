@@ -1,12 +1,14 @@
-const students = [
-  { id: 1, firstname: "Petr", surname: "Novák", nationalId: "123456789" },
-  { id: 2, firstname: "Jana", surname: "Nováková", nationalId: "987654321" },
-  { id: 3, firstname: "Klára", surname: "Novotná", nationalId: "456789123" },
-]
+const path = require("path")
+const StudentDao = require("../../dao/student.dao")
+
+const studentDao = new StudentDao(
+  path.join(__dirname, "..", "..", "data", "students.json")
+)
 
 async function getStudent(req, res) {
-  const id = parseInt(req.query.id)
-  const student = students.find((student) => student.id === id)
+  const { id } = req.query
+
+  const student = await studentDao.getStudent(id)
 
   res.json(student)
 }

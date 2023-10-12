@@ -1,13 +1,13 @@
-const classrooms = [
-  { id: 1, name: "Quinta" },
-  { id: 2, name: "Sexta" },
-  { id: 3, name: "Septima" },
-  { id: 4, name: "Octava" },
-]
+const path = require("path")
+const ClassroomDao = require("../../dao/classroom.dao")
+
+const classroomDao = new ClassroomDao(
+  path.join(__dirname, "..", "..", "data", "classrooms.json")
+)
 
 async function getClassroom(req, res) {
-  const id = parseInt(req.query.id)
-  const classroom = classrooms.find((classroom) => classroom.id === id)
+  const { id } = req.query
+  const classroom = await classroomDao.getClassroom(id)
 
   res.json(classroom)
 }

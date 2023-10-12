@@ -1,18 +1,19 @@
+const path = require("path")
+const SubjectDao = require("../../dao/subject.dao")
+
+const subjectDao = new SubjectDao(
+  path.join(__dirname, "..", "..", "data", "subjects.json")
+)
+
 async function updateSubject(req, res) {
-  const { id } = req.body
+  const { id, name, shortName, description } = req.body
 
-  const subject = {
-    id: "12345678",
-    name: "Matematika",
-    shortName: "M",
-    description:
-      "Matematika je věda o číslech, prostorech, strukturách a změnách.",
-  }
-
-  const newSubject = {
-    ...subject,
-    ...req.body,
-  }
+  const newSubject = await subjectDao.updateSubject({
+    id,
+    name,
+    shortName,
+    description,
+  })
 
   res.json(newSubject)
 }

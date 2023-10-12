@@ -1,10 +1,13 @@
-const students = [
-  { id: 1, firstname: "Petr", surname: "Novák", nationalId: "123456789" },
-  { id: 2, firstname: "Jana", surname: "Nováková", nationalId: "987654321" },
-  { id: 3, firstname: "Klára", surname: "Novotná", nationalId: "456789123" },
-]
+const path = require("path")
+const StudentDao = require("../../dao/student.dao")
+
+const studentDao = new StudentDao(
+  path.join(__dirname, "..", "..", "data", "students.json")
+)
 
 async function listStudents(req, res) {
+  const students = await studentDao.listStudents()
+
   res.json(students)
 }
 
