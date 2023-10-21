@@ -16,34 +16,40 @@ const studentDao = new StudentDao(
 )
 
 async function updateGrade(req, res) {
-  const { id, subjectId, studentId, dateTs, grade, description, weight } =
-    req.params
+  try {
+    const { id, subjectId, studentId, dateTs, grade, description, weight } =
+      req.params
 
-  const subject = await subjectDao.getSubject(subjectId)
-  if (!subject)
-    return res
-      .status(400)
-      .end(`Předmět s identifikátorem ${subjectId} neexistuje`)
+    const subject = await subjectDao.getSubject(subjectId)
+    if (!subject)
+      throw {
+        status: 400,
+        message: `Předmět s identifikátorem ${subjectId} neexistuje`,
+      }
 
-  const student = await studentDao.getStudent(studentId)
-  if (!student)
-    return res
-      .status(400)
-      .end(`Student s identifikátorem ${studentId} neexistuje`)
+    const student = await studentDao.getStudent(studentId)
+    if (!student)
+      throw {
+        status: 400,
+        message: `Student s identifikátorem ${studentId} neexistuje`,
+      }
 
-  const classroomId = student.classroomId
-  const newGrade = await gradeDao.updateGrade({
-    id,
-    subjectId,
-    studentId,
-    dateTs,
-    grade,
-    description,
-    weight,
-    classroomId,
-  })
+    const classroomId = student.classroomId
+    const newGrade = await gradeDao.updateGrade({
+      id,
+      subjectId,
+      studentId,
+      dateTs,
+      grade,
+      description,
+      weight,
+      classroomId,
+    })
 
-  res.json(newGrade)
+    res.json(newGrade)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = updateGrade

@@ -6,10 +6,14 @@ const classroomDao = new ClassroomDao(
 )
 
 async function getClassroom(req, res) {
-  const { id } = req.query
-  const classroom = await classroomDao.getClassroom(id)
+  try {
+    const { id } = req.query
+    const classroom = await classroomDao.getClassroom(id)
 
-  res.json(classroom)
+    res.json(classroom)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = getClassroom

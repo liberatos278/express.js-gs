@@ -17,34 +17,41 @@ const subjectDao = new SubjectDao(
 )
 
 async function createGrade(req, res) {
-  const { grade, weight, description, dateTs, studentId, subjectId } = req.body
-  const id = crypto.randomBytes(8).toString("hex")
+  try {
+    const { grade, weight, description, dateTs, studentId, subjectId } =
+      req.body
+    const id = crypto.randomBytes(8).toString("hex")
 
-  const student = await studentDao.getStudent(studentId)
-  if (!student)
-    return res
-      .status(400)
-      .end(`Student s identifikátorem ${studentId} neexistuje`)
+    const student = await studentDao.getStudent(studentId)
+    if (!student)
+      throw {
+        status: 400,
+        message: `Student s identifikátorem ${studentId} neexistuje`,
+      }
 
-  const subject = await subjectDao.getSubject(subjectId)
-  if (!subject)
-    return res
-      .status(400)
-      .end(`Předmět s identifikátorem ${subjectId} neexistuje`)
+    const subject = await subjectDao.getSubject(subjectId)
+    if (!subject)
+      throw {
+        status: 400,
+        message: `Předmět s identifikátorem ${subjectId} neexistuje`,
+      }
 
-  const classroomId = student.classroomId
-  const gradeObj = await gradeDao.createGrade({
-    id,
-    grade,
-    weight,
-    description,
-    dateTs,
-    studentId,
-    subjectId,
-    classroomId,
-  })
+    const classroomId = student.classroomId
+    const gradeObj = await gradeDao.createGrade({
+      id,
+      grade,
+      weight,
+      description,
+      dateTs,
+      studentId,
+      subjectId,
+      classroomId,
+    })
 
-  res.json(gradeObj)
+    res.json(gradeObj)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = createGrade

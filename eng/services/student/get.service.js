@@ -6,11 +6,15 @@ const studentDao = new StudentDao(
 )
 
 async function getStudent(req, res) {
-  const { id } = req.query
+  try {
+    const { id } = req.query
 
-  const student = await studentDao.getStudent(id)
+    const student = await studentDao.getStudent(id)
 
-  res.json(student)
+    res.json(student)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = getStudent

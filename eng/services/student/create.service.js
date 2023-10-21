@@ -12,25 +12,29 @@ const classroomDao = new ClassroomDao(
 )
 
 async function createStudent(req, res) {
-  const { firstname, surname, nationalId, classroomId } = req.body
-  const id = crypto.randomBytes(8).toString("hex")
+  try {
+    const { firstname, surname, nationalId, classroomId } = req.body
+    const id = crypto.randomBytes(8).toString("hex")
 
-  const classroom = await classroomDao.getClassroom(classroomId)
-  if (!classroom) {
-    return res
-      .status(400)
-      .end(`Classroom with id ${classroomId} does not exist`)
+    const classroom = await classroomDao.getClassroom(classroomId)
+    if (!classroom)
+      throw {
+        status: 400,
+        message: `Classroom with id ${classroomId} doesn't exist`,
+      }
+
+    const student = await studentDao.createStudent({
+      id,
+      firstname,
+      surname,
+      nationalId,
+      classroomId,
+    })
+
+    res.json(student)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
   }
-
-  const student = await studentDao.createStudent({
-    id,
-    firstname,
-    surname,
-    nationalId,
-    classroomId,
-  })
-
-  res.json(student)
 }
 
 module.exports = createStudent

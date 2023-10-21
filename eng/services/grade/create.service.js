@@ -17,30 +17,41 @@ const subjectDao = new SubjectDao(
 )
 
 async function createGrade(req, res) {
-  const { grade, weight, description, dateTs, studentId, subjectId } = req.body
-  const id = crypto.randomBytes(8).toString("hex")
+  try {
+    const { grade, weight, description, dateTs, studentId, subjectId } =
+      req.body
+    const id = crypto.randomBytes(8).toString("hex")
 
-  const student = await studentDao.getStudent(studentId)
-  if (!student)
-    return res.status(400).end(`Student with id ${studentId} does not exist`)
+    const student = await studentDao.getStudent(studentId)
+    if (!student)
+      throw {
+        status: 400,
+        message: `Student with id ${studentId} doesn't exist`,
+      }
 
-  const subject = await subjectDao.getSubject(subjectId)
-  if (!subject)
-    return res.status(400).end(`Subject with id ${subjectId} does not exist`)
+    const subject = await subjectDao.getSubject(subjectId)
+    if (!subject)
+      throw {
+        status: 400,
+        message: `Subject with id ${subjectId} doesn't exist`,
+      }
 
-  const classroomId = student.classroomId
-  const gradeObj = await gradeDao.createGrade({
-    id,
-    grade,
-    weight,
-    description,
-    dateTs,
-    studentId,
-    subjectId,
-    classroomId,
-  })
+    const classroomId = student.classroomId
+    const gradeObj = await gradeDao.createGrade({
+      id,
+      grade,
+      weight,
+      description,
+      dateTs,
+      studentId,
+      subjectId,
+      classroomId,
+    })
 
-  res.json(gradeObj)
+    res.json(gradeObj)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = createGrade

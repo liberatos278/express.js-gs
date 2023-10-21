@@ -7,17 +7,21 @@ const subjectDao = new SubjectDao(
 )
 
 async function createSubject(req, res) {
-  const { name, shortName, description } = req.body
-  const id = crypto.randomBytes(8).toString("hex")
+  try {
+    const { name, shortName, description } = req.body
+    const id = crypto.randomBytes(8).toString("hex")
 
-  const subject = await subjectDao.createSubject({
-    id,
-    name,
-    shortName,
-    description,
-  })
+    const subject = await subjectDao.createSubject({
+      id,
+      name,
+      shortName,
+      description,
+    })
 
-  res.json(subject)
+    res.json(subject)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = createSubject

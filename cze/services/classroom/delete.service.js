@@ -11,18 +11,22 @@ const studentDao = new StudentDao(
 )
 
 async function deleteClassroom(req, res) {
-  const { id } = req.body
+  try {
+    const { id } = req.body
 
-  await classroomDao.deleteClassroom(id)
+    await classroomDao.deleteClassroom(id)
 
-  const students = await studentDao.listStudents()
-  for (let student of students) {
-    if (student.classroomId === id) {
-      await studentDao.deleteStudent(student.id)
+    const students = await studentDao.listStudents()
+    for (let student of students) {
+      if (student.classroomId === id) {
+        await studentDao.deleteStudent(student.id)
+      }
     }
-  }
 
-  res.status(204).end()
+    res.status(204).end()
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = deleteClassroom

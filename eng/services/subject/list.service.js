@@ -6,9 +6,13 @@ const subjectDao = new SubjectDao(
 )
 
 async function listSubjects(req, res) {
-  const subjects = await subjectDao.listSubjects()
+  try {
+    const subjects = await subjectDao.listSubjects()
 
-  res.json(subjects)
+    res.json(subjects)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = listSubjects

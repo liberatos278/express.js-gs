@@ -6,11 +6,15 @@ const subjectDao = new SubjectDao(
 )
 
 async function getSubject(req, res) {
-  const { id } = req.query
+  try {
+    const { id } = req.query
 
-  const subject = await subjectDao.getSubject(id)
+    const subject = await subjectDao.getSubject(id)
 
-  res.json(subject)
+    res.json(subject)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = getSubject

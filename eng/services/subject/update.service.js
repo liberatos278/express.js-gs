@@ -6,16 +6,20 @@ const subjectDao = new SubjectDao(
 )
 
 async function updateSubject(req, res) {
-  const { id, name, shortName, description } = req.body
+  try {
+    const { id, name, shortName, description } = req.body
 
-  const newSubject = await subjectDao.updateSubject({
-    id,
-    name,
-    shortName,
-    description,
-  })
+    const newSubject = await subjectDao.updateSubject({
+      id,
+      name,
+      shortName,
+      description,
+    })
 
-  res.json(newSubject)
+    res.json(newSubject)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = updateSubject

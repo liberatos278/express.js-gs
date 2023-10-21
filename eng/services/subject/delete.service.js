@@ -11,18 +11,22 @@ const gradeDao = new GradeDao(
 )
 
 async function deleteSubject(req, res) {
-  const { id } = req.body
+  try {
+    const { id } = req.body
 
-  await subjectDao.deleteSubject(id)
+    await subjectDao.deleteSubject(id)
 
-  const grades = await gradeDao.getGrades()
-  for (const grade of grades) {
-    if (grade.subjectId === id) {
-      await gradeDao.deleteGrade(grade.id)
+    const grades = await gradeDao.getGrades()
+    for (const grade of grades) {
+      if (grade.subjectId === id) {
+        await gradeDao.deleteGrade(grade.id)
+      }
     }
-  }
 
-  res.status(204).end()
+    res.status(204).end()
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = deleteSubject

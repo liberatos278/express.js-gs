@@ -6,11 +6,15 @@ const gradeDao = new GradeDao(
 )
 
 async function deleteGrade(req, res) {
-  const { id } = req.body
+  try {
+    const { id } = req.body
 
-  await gradeDao.deleteGrade(id)
+    await gradeDao.deleteGrade(id)
 
-  res.status(204).end()
+    res.status(204).end()
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = deleteGrade

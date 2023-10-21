@@ -6,9 +6,13 @@ const gradeDao = new GradeDao(
 )
 
 async function listGrades(req, res) {
-  const grades = await gradeDao.listGrades()
+  try {
+    const grades = await gradeDao.listGrades()
 
-  res.json(grades)
+    res.json(grades)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = listGrades

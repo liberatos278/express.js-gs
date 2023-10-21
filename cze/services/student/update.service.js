@@ -11,24 +11,28 @@ const classroomDao = new ClassroomDao(
 )
 
 async function updateStudent(req, res) {
-  const { id, firstname, surname, nationalId, classroomId } = req.body
+  try {
+    const { id, firstname, surname, nationalId, classroomId } = req.body
 
-  const classroom = await classroomDao.getClassroom(classroomId)
-  if (!classroom) {
-    return res
-      .status(400)
-      .end(`Třída s identifikátorem ${classroomId} neexistuje`)
+    const classroom = await classroomDao.getClassroom(classroomId)
+    if (!classroom)
+      throw {
+        status: 400,
+        message: `Třída s identifikátorem ${classroomId} neexistuje`,
+      }
+
+    const newStudent = await studentDao.updateStudent({
+      id,
+      firstname,
+      surname,
+      nationalId,
+      classroomId,
+    })
+
+    res.json(newStudent)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
   }
-
-  const newStudent = await studentDao.updateStudent({
-    id,
-    firstname,
-    surname,
-    nationalId,
-    classroomId,
-  })
-
-  res.json(newStudent)
 }
 
 module.exports = updateStudent

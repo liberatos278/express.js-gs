@@ -6,9 +6,12 @@ const classroomDao = new ClassroomDao(
 )
 
 async function listClassrooms(req, res) {
-  const classrooms = await classroomDao.listClassrooms()
-
-  res.json(classrooms)
+  try {
+    const classrooms = await classroomDao.listClassrooms()
+    res.json(classrooms)
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message })
+  }
 }
 
 module.exports = listClassrooms
