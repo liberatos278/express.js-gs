@@ -6,7 +6,7 @@ const subjectDao = new SubjectDao(
 )
 
 async function listSubjects(req, res) {
-  const subjects = await subjectDao.getSubjects()
+  const subjects = await subjectDao.listSubjects()
 
   res.json(subjects)
 }
