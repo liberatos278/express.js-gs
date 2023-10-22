@@ -3,6 +3,8 @@ const ClassroomDao = require("../../dao/classroom.dao")
 const StudentDao = require("../../dao/student.dao")
 const GradeDao = require("../../dao/grade.dao")
 const SubjectDao = require("../../dao/subject.dao")
+const ajv = require("../../utils/ajv.util")
+const schema = require("../../schema/classroom/load.schema")
 
 const classroomDao = new ClassroomDao(
   path.join(__dirname, "..", "..", "data", "classrooms.json")
@@ -23,8 +25,15 @@ const subjectDao = new SubjectDao(
 async function loadClassroom(req, res) {
   try {
     const { id } = req.query
-    const classroom = await classroomDao.getClassroom(id)
 
+    const valid = ajv.validate(schema, req.query)
+    if (!valid)
+      throw {
+        status: 400,
+        message: ajv.errors,
+      }
+
+    const classroom = await classroomDao.getClassroom(id)
     if (!classroom)
       throw {
         status: 400,
